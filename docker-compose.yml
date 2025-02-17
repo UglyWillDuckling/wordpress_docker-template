@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - dbdata:/var/lib/mysql
+    command: "--default-authentication-plugin=mysql_native_password"
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: root
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    # image: php:8.3-fpm
+    volumes:
+      - ./:/var/www/html
+
+  webserver:
+    depends_on:
+      - php
+    image: nginx:1.15.12-alpine
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+
+volumes:
+  dbdata:
