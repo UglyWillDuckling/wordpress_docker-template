@@ -10,7 +10,7 @@ GROUP_ID=${GID:-1000}
 # chown -R ${USER_ID}:${GROUP_ID} /var/www || echo "Some files could not be changed"
 
 # Clear configurations to avoid caching issues in development
-echo "Clearing configurations..."
+# echo "Clearing configurations..."
 # php artisan config:clear
 # php artisan route:clear
 # php artisan view:clear
