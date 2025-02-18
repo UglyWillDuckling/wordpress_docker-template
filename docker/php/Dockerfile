@@ -50,7 +50,7 @@ RUN curl -o /usr/local/bin/php-fpm-healthcheck \
 ####
 
 # TODO: check if it would be better to use the builder as the starting point
-FROM php:8.3-fpm AS production
+FROM builder AS production
 
 # Install only runtime libraries needed in production
 # libfcgi-bin and procps are required for the php-fpm-healthcheck script
@@ -66,10 +66,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Copy PHP extensions and libraries from the builder stage
-COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
-COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
-COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
-COPY --from=builder /usr/local/bin/php-fpm-healthcheck /usr/local/bin/php-fpm-healthcheck
+# COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+# COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
+# COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
+# COPY --from=builder /usr/local/bin/php-fpm-healthcheck /usr/local/bin/php-fpm-healthcheck
 
 # Use the recommended production PHP configuration
 # -----------------------------------------------------------
@@ -84,7 +84,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN sed -i '/\[www\]/a pm.status_path = /status' /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # Copy the application code and dependencies from the build stage
-COPY --from=builder /var/www/html /var/www/html
+# COPY --from=builder /var/www/html /var/www/html
 
 # Ensure correct permissions
 # RUN chown -R www-data:www-data /var/www
