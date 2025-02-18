@@ -49,7 +49,6 @@ RUN curl -o /usr/local/bin/php-fpm-healthcheck \
 #### STAGE 2: Production 
 ####
 
-# TODO: check if it would be better to use the builder as the starting point
 FROM builder AS production
 
 # Install only runtime libraries needed in production
@@ -64,12 +63,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
 # RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Copy PHP extensions and libraries from the builder stage
-# COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
-# COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
-# COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
-# COPY --from=builder /usr/local/bin/php-fpm-healthcheck /usr/local/bin/php-fpm-healthcheck
 
 # Use the recommended production PHP configuration
 # -----------------------------------------------------------
@@ -91,7 +84,6 @@ RUN sed -i '/\[www\]/a pm.status_path = /status' /usr/local/etc/php-fpm.d/zz-doc
 # # Switch to the non-privileged user to run the application
 # USER www-data
 
-# Set working directory
 WORKDIR /var/www/html
 
 ####
@@ -122,10 +114,8 @@ RUN if [ "${XDEBUG_ENABLED}" = "true" ]; then \
     echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
 fi
 
-# Add ARGs for syncing permissions
 # ARG UID=1000
 # ARG GID=1000
-#
 # # Create a new user with the specified UID and GID, reusing an existing group if GID exists
 # RUN if getent group ${GID}; then \
 #       group_name=$(getent group ${GID} | cut -d: -f1); \
@@ -141,20 +131,10 @@ fi
 #     sed -i "s/group = www-data/group = $group_name/g" /usr/local/etc/php-fpm.d/www.conf
 
 
-# Set the working directory
-WORKDIR /var/www/html
-
-# Copy the entrypoint script dev
-COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+# RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Switch back to the non-privileged user to run the application
 # USER www-data
 
-# TODO: check if this is a duplicate from prod
-# Change the default command to run the entrypoint script
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+WORKDIR /var/www/html
