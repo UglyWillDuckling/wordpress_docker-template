@@ -4,19 +4,15 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     command: "--default-authentication-plugin=mysql_native_password"
-    environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_ROOT_PASSWORD: root
+    env_file:
+      - .env
 
   php-fpm:
-    # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
       target: development
       args:
-        # UID: ${UID:-1000}
-        # GID: ${GID:-1000}
         XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
         XDEBUG_MODE: develop,coverage,debug,profile
         XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
@@ -25,6 +21,8 @@ services:
         XDEBUG_LOG_LEVEL: 0
     tty: true
     stdin_open: true
+    env_file:
+      - .env
     volumes:
       - ./:/var/www/html
 
@@ -34,7 +32,7 @@ services:
     image: nginx:1.15.12-alpine
     ports:
       - "80:80"
-      # - "443:443"
+      - "443:443"
     volumes:
       - ./:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
