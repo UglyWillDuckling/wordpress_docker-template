@@ -1,11 +1,14 @@
 services:
-  db:
-    image: mysql:8.0
+  webserver:
+    image: nginx:1.15.12-alpine
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      - dbdata:/var/lib/mysql
-    command: "--default-authentication-plugin=mysql_native_password"
-    env_file:
-      - .env
+      - ./:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
 
   php-fpm:
     build:
@@ -25,17 +28,15 @@ services:
       - .env
     volumes:
       - ./:/var/www/html
-
-  webserver:
     depends_on:
-      - php-fpm
-    image: nginx:1.15.12-alpine
-    ports:
-      - "80:80"
-      - "443:443"
+      - db
+
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env
     volumes:
-      - ./:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
+      - dbdata:/var/lib/mysql
 
 volumes:
   dbdata:
