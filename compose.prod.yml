@@ -6,6 +6,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx-conf:/etc/nginx/conf.d
+      - ./:/var/www/html
     networks:
       - laravel-production
     depends_on:
@@ -26,6 +27,8 @@ services:
       - db
     restart: unless-stopped
     container_name: prod_php
+    volumes:
+      - ./:/var/www/html
 
   db:
     image: mysql:8.0
