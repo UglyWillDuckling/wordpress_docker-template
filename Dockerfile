@@ -35,3 +35,9 @@ RUN pecl install redis && docker-php-ext-enable redis
 
 # Xdebug for debugging - REMOVE IN PRODUCTION!
 RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+# Get Composer (PHP package manager)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html

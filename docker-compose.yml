@@ -12,11 +12,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      PHP_IDE_CONFIG: serverName=Docker # For Xdebug
     depends_on:
       - db
     # image: php:8.3-fpm
     volumes:
       - ./:/var/www/html
+      # - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/conf.d/:/usr/local/etc/php/conf.d/
 
   webserver:
     depends_on:
