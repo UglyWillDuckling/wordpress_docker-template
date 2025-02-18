@@ -8,23 +8,29 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_ROOT_PASSWORD: root
 
-  php:
+  php-fpm:
+    # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
     build:
       context: .
-      dockerfile: Dockerfile
-    environment:
-      PHP_IDE_CONFIG: serverName=Docker # For Xdebug
-    depends_on:
-      - db
-    # image: php:8.3-fpm
+      dockerfile: ./docker/php/Dockerfile
+      target: development
+      args:
+        # UID: ${UID:-1000}
+        # GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: develop,coverage,debug,profile
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: /dev/stdout
+        XDEBUG_LOG_LEVEL: 0
+    tty: true
+    stdin_open: true
     volumes:
       - ./:/var/www/html
-      # - ./docker/php/php.ini:/usr/local/etc/php/php.ini
-      - ./docker/php/conf.d/:/usr/local/etc/php/conf.d/
 
   webserver:
     depends_on:
-      - php
+      - php-fpm
     image: nginx:1.15.12-alpine
     ports:
       - "80:80"

@@ -1,6 +1,5 @@
 <?php
 
-phpinfo();
 /**
  * WordPress View Bootstrapper
  */
