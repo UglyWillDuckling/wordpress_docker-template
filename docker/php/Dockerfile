@@ -62,8 +62,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     procps \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy the entrypoint script prod
-# COPY ./docker/production/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.sh
+# COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
 # RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Copy PHP extensions and libraries from the builder stage
@@ -94,13 +93,6 @@ COPY --from=builder /var/www/html /var/www/html
 
 # Set working directory
 WORKDIR /var/www/html
-
-# Change the default command to run the entrypoint script
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
 
 ####
 #### STAGE 3: Development
