@@ -8,21 +8,16 @@ wp/web/app/uploads/*
 !wp/web/app/uploads/.gitkeep
 wp/web/app/cache/*
 
-# WordPress
 wp/web/wp
 wp/web/.htaccess
 
-# Logs
 *.log
 
-# Dotenv
 .env
 .env.*
 !.env.example
 
-# Composer
 wp/vendor
 wp/auth.json
 
-# WP-CLI
 wp/wp-cli.local.yml
