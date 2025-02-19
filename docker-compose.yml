@@ -5,8 +5,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
+      - ./wordpress/:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d
     depends_on:
       - php-fpm
 
@@ -27,7 +27,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./:/var/www/html
+      - ./wordpress/:/var/www/html
     depends_on:
       - db
 
