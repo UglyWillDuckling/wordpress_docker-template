@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set the working directory inside the container
 WORKDIR /var/www/html
 
-COPY . /var/www/html
+COPY ./wp /var/www/html
 
 # Install Composer and dependencies
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -72,9 +72,6 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Enable PHP-FPM status page by modifying zz-docker.conf with sed
 RUN sed -i '/\[www\]/a pm.status_path = /status' /usr/local/etc/php-fpm.d/zz-docker.conf
-
-# Copy the application code and dependencies from the build stage
-# COPY --from=builder /var/www/html /var/www/html
 
 # Ensure correct permissions
 # RUN chown -R www-data:www-data /var/www
