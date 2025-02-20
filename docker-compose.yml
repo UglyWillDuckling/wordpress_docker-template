@@ -28,6 +28,7 @@ services:
       - .env
     volumes:
       - ./wp/:/var/www/html
+      - ./docker/php/dev.php.ini:/usr/local/etc/php/conf.d/dev.php.ini
     depends_on:
       - db
 
