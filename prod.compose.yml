@@ -29,6 +29,7 @@ services:
     container_name: prod_php
     volumes:
       - ./wp/:/var/www/html
+      - ./docker/php/prod.php.ini:/usr/local/etc/php/conf.d/prod.php.ini
 
   db:
     image: mysql:8.0
