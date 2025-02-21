@@ -96,17 +96,16 @@ ARG XDEBUG_LOG_LEVEL=0
 
 USER root
 
-# Configure Xdebug if enabled
-RUN if [ "${XDEBUG_ENABLED}" = "true" ]; then \
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug && \
-    echo "xdebug.mode=${XDEBUG_MODE}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+RUN pecl install xdebug && \
+    docker-php-ext-enable xdebug 
+
+# Configure Xdebug
+RUN echo "xdebug.mode=${XDEBUG_MODE}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.idekey=${XDEBUG_IDE_KEY}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.log=${XDEBUG_LOG}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.log_level=${XDEBUG_LOG_LEVEL}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.client_host=${XDEBUG_HOST}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-fi
+    echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; 
 
 # ARG UID=1000
 # ARG GID=1000
@@ -123,7 +122,6 @@ fi
 # Dynamically update php-fpm to use the new user and group
 # RUN sed -i "s/user = www-data/user = www/g" /usr/local/etc/php-fpm.d/www.conf && \
 #     sed -i "s/group = www-data/group = $group_name/g" /usr/local/etc/php-fpm.d/www.conf
-
 
 # Switch back to the non-privileged user to run the application
 # USER www-data
