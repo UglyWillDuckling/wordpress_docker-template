@@ -4,9 +4,23 @@ version: 0.1.0
 
 environment_variables:
   - name: api_key
-    help: Set your API key
 
 commands:
+  - name: compose
+    alias: dc*
+    help: Compose Commands
+
+    commands:
+      - name: start
+        help: Run Docker Compose
+
+      - name: stop
+        help: Stop all services
+
+      - name: rebuild
+        help: Rebuild all services
+        catch_all: true
+
   - name: download
     alias: d
     help: Download a file
@@ -30,20 +44,3 @@ commands:
     environment_variables:
       - name: default_target_location
         help: Set the default location to download to
-
-  - name: upload
-    alias: u
-    help: Upload a file
-    args:
-      - name: source
-        required: true
-        help: File to upload
-
-    flags:
-      - long: --user
-        short: -u
-        arg: user
-        required: true
-      - long: --password
-        short: -p
-        arg: password
